@@ -67,7 +67,6 @@ jobs:
 
     - name: Modify conan profile
       run: |
-        conan profile detect --force
         conan profile update conf.tools.system.package_manager:mode=install
       #   mkdir -p ~/.conan
       #   echo "[conf]" >> ~/.conan/conan.conf
