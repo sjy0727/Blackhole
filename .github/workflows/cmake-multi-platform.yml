@@ -60,10 +60,16 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Setup Conan
-      uses: jwidauer/setup-conan@v1
+    # - name: Setup Conan
+    #   uses: jwidauer/setup-conan@v1
+    #   with:
+    #     version: '1.64.1'  # 指定Conan的版本
+
+    - name: Install Conan
+      id: conan
+      uses: turtlebrowser/get-conan@main
       with:
-        version: '1.64.1'  # 指定Conan的版本
+        version: 1.64.1
 
     - name: Modify conan profile
       run: |
