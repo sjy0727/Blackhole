@@ -61,9 +61,9 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Setup Conan
-      uses: conan-io/setup-conan@v1
+      uses: jwidauer/setup-conan@v1
       with:
-        conan-version: '1.64.1'  # 指定Conan的版本
+        version: '1.64.1'  # 指定Conan的版本
         
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
