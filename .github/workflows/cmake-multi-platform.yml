@@ -65,11 +65,14 @@ jobs:
       with:
         version: '1.64.1'  # 指定Conan的版本
 
-    - name: Modify conan.conf
+    - name: Modify conan profile
       run: |
-        mkdir -p ~/.conan
-        echo "[conf]" >> ~/.conan/conan.conf
-        echo "tools.system.package_manager:mode=install" >> ~/.conan/conan.conf
+        conan profile detect --force
+        conan profile update conf.tools.system.package_manager:mode=install
+      #   mkdir -p ~/.conan
+      #   echo "[conf]" >> ~/.conan/conan.conf
+      #   echo "tools.system.package_manager:mode=install" >> ~/.conan/conan.conf
+        
 
     # - name: Install dependencies on Ubuntu
     #   if: matrix.os == 'ubuntu-latest'
