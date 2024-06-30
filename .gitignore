@@ -1,6 +1,9 @@
 /build
-.vscode
+/.vscode
 /cmake-build-debug
-.idea
+/.idea
+
+CMakeUserPresets.json
+
 .DS_Store
 imgui.ini
