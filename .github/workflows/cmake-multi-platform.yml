@@ -64,7 +64,7 @@ jobs:
     - name: Setup Conan
       uses: jwidauer/setup-conan@v1
       with:
-        version: '1.64.1'  # 指定Conan的版本
+        version: '2.4.1'  # 指定Conan的版本
 
     # - name: Install Conan
     #   id: conan
@@ -74,12 +74,12 @@ jobs:
 
     - name: Modify conan profile
       run: |
-        conan profile new --detect --force default
-        conan profile update conf.tools.system.package_manager:mode=install default
-        conan profile show default
-      #   mkdir -p ~/.conan
-      #   echo "[conf]" >> ~/.conan/conan.conf
-      #   echo "tools.system.package_manager:mode=install" >> ~/.conan/conan.conf
+        conan profile --detect --force
+        conan config -cc tools.system.package_manager:mode=install
+        conan config -cc tools.system.package_manager:sudo=True
+#        conan profile new --detect --force default
+#        conan profile update conf.tools.system.package_manager:mode=install default
+#        conan profile show default
         
 
     - name: Install dependencies on Ubuntu
