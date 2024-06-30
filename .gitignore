@@ -1,7 +1,7 @@
 /build
+/.vscode
 /cmake-build-debug
 /.idea
-/.vscode
 
 .DS_Store
 CMakeUserPresets.json
