@@ -24,11 +24,11 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [ubuntu-latest, windows-2019, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release]
         c_compiler: [gcc, clang, cl]
         include:
-          - os: windows-2019
+          - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
           - os: ubuntu-latest
@@ -38,9 +38,9 @@ jobs:
             c_compiler: clang
             cpp_compiler: clang++
         exclude:
-          - os: windows-2019
+          - os: windows-latest
             c_compiler: gcc
-          - os: windows-2019
+          - os: windows-latest
             c_compiler: clang
           - os: ubuntu-latest
             c_compiler: cl
@@ -64,7 +64,7 @@ jobs:
     - name: Setup Conan
       uses: jwidauer/setup-conan@v1
       with:
-        version: '1.64.1'  # 指定Conan的版本
+        version: '2.4.1'  # 指定Conan的版本
 
     # - name: Install Conan
     #   id: conan
@@ -74,12 +74,12 @@ jobs:
 
     - name: Modify conan profile
       run: |
-        conan profile new --detect --force default
-        conan profile update conf.tools.system.package_manager:mode=install default
-        conan profile show default
-      #   mkdir -p ~/.conan
-      #   echo "[conf]" >> ~/.conan/conan.conf
-      #   echo "tools.system.package_manager:mode=install" >> ~/.conan/conan.conf
+        conan profile detect --force
+        conan config -cc tools.system.package_manager:mode=install home
+        conan config -cc tools.system.package_manager:sudo=True home
+#        conan profile new --detect --force default
+#        conan profile update conf.tools.system.package_manager:mode=install default
+#        conan profile show default
         
 
     - name: Install dependencies on Ubuntu
@@ -89,7 +89,11 @@ jobs:
         sudo chmod 777 /var/lib/apt/lists/lock
         sudo chmod 777 /var/lib/dpkg/lock-frontend
         sudo apt-get install -y libgl-dev libgl1-mesa-dev libxcb-util-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxcomposite-dev libxcursor-dev libxdamage-dev libxfixes-dev libxi-dev libxinerama-dev libxmu-dev libxmuu-dev libxpm-dev libxrandr-dev libxres-dev libxss-dev libxtst-dev libxv-dev libxxf86vm-dev libxcb-glx0-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-cursor-dev libxcb-dri2-0-dev libxcb-dri3-dev libxcb-present-dev libxcb-composite0-dev libxcb-ewmh-dev libxcb-res0-dev
-        
+
+    - name: Install dependencies package from conanfile.txt
+      run: |
+        conan install . --output-folder=${{ steps.strings.outputs.build-output-dir }} --build=missing    
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
@@ -98,6 +102,7 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.build-output-dir }}/conan_toolchain.cmake
         -S ${{ github.workspace }}
 
     - name: Build
