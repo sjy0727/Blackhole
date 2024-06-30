@@ -75,8 +75,8 @@ jobs:
     - name: Modify conan profile
       run: |
         conan profile detect --force
-        conan config -cc tools.system.package_manager:mode=install
-        conan config -cc tools.system.package_manager:sudo=True
+        conan config -cc tools.system.package_manager:mode=install home
+        conan config -cc tools.system.package_manager:sudo=True home
 #        conan profile new --detect --force default
 #        conan profile update conf.tools.system.package_manager:mode=install default
 #        conan profile show default
