@@ -2,13 +2,6 @@
 
 ![Screenshot](docs/blackhole-screenrecord.gif)
 
-## Bugfix
-
-- brew install conan@1
-- shader 中 gl_FragColor 替换 out vec4 fragColor;
-- 移动了窗口属性的位置到glewinit之前
-- 非全屏问题，用户自己设置的窗口大小数值上与glfwGetFramebufferSize中的尺寸不一样，viewport应与后者对应。
-
 ## Prerequisite
 
 - [cmake](https://cmake.org/)
@@ -17,14 +10,24 @@
 [^1]: You might need to configure [$HOME/.conan/conan.conf](https://docs.conan.io/en/latest/reference/config_files/conan.conf.html) and Conan [profiles](https://docs.conan.io/en/latest/reference/profiles.html) if the `default profile` is not generated due to different build environments on your distribution.
 
 ## Build the code
+Use ```sh build.sh``` or follow the script
 
 ```bash
+# Install package from conanfile.txt in build folder.
+conan install . --output-folder=build --build=missing
+
 # Configure the project and generate a native build system.
-cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
 
 # Compile / build the project.
 cmake --build build
 ```
+
+## Bugfix
+
+- shader 中 gl_FragColor 替换 out vec4 fragColor;
+- 移动了窗口属性的位置到glewinit之前
+- 非全屏问题，用户自己设置的窗口大小数值上与glfwGetFramebufferSize中的尺寸不一样，viewport应与后者对应。
 
 ## Acknowledgements
 
